@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="150dp"
+    android:background="#535353"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="날씨 정보를 로딩중입니다."
+        android:textSize="20dp"
+        android:textColor="#00c0c0"
+        android:gravity="center"
+        android:layout_gravity="center"/>
+
+</LinearLayout>

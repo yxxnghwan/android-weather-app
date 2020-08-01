@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".WeatherInfoActivity"
+    android:orientation="vertical"
+    android:background="#404040">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="선택지역"
+        android:id="@+id/tv_location"
+        android:textSize="30dp"
+        android:gravity="center"
+        android:textColor="#00c0c0"
+        android:layout_marginBottom="4dp"
+        android:background="#535353"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="5">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="3"
+            android:background="#535353">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="40dp"
+                android:text="시간"
+                android:textColor="#00c0c0"
+                android:gravity="center"
+                android:id="@+id/current_time"/>
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:id="@+id/weather_main"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="온도 : "
+                    android:textSize="20dp"
+                    android:textColor="#00c0c0"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="temp"
+                    android:textSize="20dp"
+                    android:id="@+id/tv_temp"
+                    android:textColor="#00c0c0"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="체감온도 : "
+                    android:textSize="20dp"
+                    android:textColor="#00c0c0"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="feelsLike"
+                    android:textSize="20dp"
+                    android:textColor="#00c0c0"
+                    android:id="@+id/tv_feelsLike"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="습도 : "
+                    android:textSize="20dp"
+                    android:textColor="#00c0c0"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="humidity"
+                    android:textSize="20dp"
+                    android:textColor="#00c0c0"
+                    android:id="@+id/tv_humidity"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="풍속 : "
+                    android:textSize="20dp"
+                    android:textColor="#00c0c0"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="windSpeed"
+                    android:textSize="20dp"
+                    android:textColor="#00c0c0"
+                    android:id="@+id/tv_windSpeed"/>
+            </LinearLayout>
+
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/delete_location_btn"
+                android:id="@+id/deleteBtn"
+                android:clickable="true" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:background="#404040"
+            android:layout_weight="2">
+            <LinearLayout
+                android:layout_width="3dp"
+                android:layout_height="match_parent"
+                />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/forecast_bar"
+                    android:scrollbarFadeDuration="0"
+                    android:scrollbarSize="5dp"
+                    />
+            </ScrollView>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

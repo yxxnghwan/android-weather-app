@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddLocationActivity"
+    android:orientation="vertical"
+    android:background="#434343">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="지명을 입력하세요 : "
+            android:textColor="#00c0c0"
+            android:textSize="15dp"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editAddress"
+            android:textColorHint="#a9a9a9"
+            android:theme="@style/EditTheme"
+            android:textColor="#00c0c0"
+            android:inputType="text"
+            android:imeOptions="actionDone"/>
+    </LinearLayout>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="검색"
+        android:id="@+id/searchBtn"
+        android:background="#535353"
+        android:textColor="#00c0c0"
+        android:layout_margin="10dp"/>
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="150dp">
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/addrListView"
+            android:background="#535353"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="4dp"
+            />
+    </ScrollView>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvInfo"
+        android:text="선택지역"
+        android:gravity="center"
+        android:textSize="20dp"
+        android:textColor="#00c0c0"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/addBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:background="#535353"
+            android:text="확인"
+            android:textColor="#00c0c0" />
+    </LinearLayout>
+
+
+</LinearLayout>

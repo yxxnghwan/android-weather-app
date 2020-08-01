@@ -1,0 +1,211 @@
+package com.example.weather;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Calendar;
+
+public class WeatherInfoActivity extends AppCompatActivity {
+
+    TextView tv_location, tv_temp, tv_feelsLike, tv_humidity, tv_windSpeed, currentTime;
+    ImageView deleteBtn;
+    ImageView weather_main;
+
+    Intent intent;
+
+    MyDBHelper dbHelper;
+    SQLiteDatabase sqlDB;
+    Cursor cur;
+
+    double lat, lon;
+
+
+    Weather weather;
+    String forecastURL;
+    String weatherURL;
+    int id;
+
+    Calendar c = Calendar.getInstance();
+
+    RecyclerView forecastList;
+    RecyclerForecastAdapter adapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_weather_info);
+
+        tv_location = findViewById(R.id.tv_location);
+        weather_main = findViewById(R.id.weather_main);
+        tv_temp = findViewById(R.id.tv_temp);
+        tv_feelsLike = findViewById(R.id.tv_feelsLike);
+        tv_humidity = findViewById(R.id.tv_humidity);
+        tv_windSpeed = findViewById(R.id.tv_windSpeed);
+        deleteBtn = findViewById(R.id.deleteBtn);
+        forecastList = findViewById(R.id.forecast_bar);
+        currentTime = findViewById(R.id.current_time);
+
+        weather = new Weather(WeatherInfoActivity.this);
+
+        intent = getIntent();
+        String locationName = intent.getStringExtra("locationName");
+
+        dbHelper = new MyDBHelper(WeatherInfoActivity.this);
+        sqlDB = dbHelper.getReadableDatabase();
+
+        cur = sqlDB.rawQuery("select * from tbl_weather where location_name = '"+ locationName +"';", null);
+
+        if(cur.moveToNext()) {
+            id = cur.getInt(cur.getColumnIndex("id"));
+            lat = cur.getDouble(cur.getColumnIndex("lat"));
+            Log.d("lat : ", lat+"");
+            lon = cur.getDouble(cur.getColumnIndex("lon"));
+            Log.d("lon : ", lon+"");
+            tv_location.setText(cur.getString(cur.getColumnIndex("location_name")));
+        }
+        forecastURL = "http://api.openweathermap.org/data/2.5/forecast?lat="+ lat +"&lon="+ lon +"&units=metric&appid=" + SecretInfo.OPENWEATHERMAP_API_KEY;
+
+        ArrayList<Weather> forecast = Weather.getForecast(forecastURL, WeatherInfoActivity.this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(WeatherInfoActivity.this);
+        forecastList.setLayoutManager(linearLayoutManager);
+
+        adapter = new RecyclerForecastAdapter();
+        forecastList.setAdapter(adapter);
+
+        for(Weather w : forecast) {
+            adapter.addItem(w);
+        }
+
+        weatherURL = "http://api.openweathermap.org/data/2.5/weather?lat="+ lat +"&lon="+ lon +"&units=metric&appid=" + SecretInfo.OPENWEATHERMAP_API_KEY;
+
+
+
+        weather.setInfoFromURL(weatherURL);
+
+
+        c = Calendar.getInstance();
+        c.setTimeInMillis(System.currentTimeMillis());
+        currentTime.setText((c.get(Calendar.AM_PM)== 0? "AM" : "PM") + " " + (c.get(Calendar.HOUR)==0? 12:c.get(Calendar.HOUR)) + ":" + (c.get(Calendar.MINUTE) < 10? "0" + c.get(Calendar.MINUTE) :c.get(Calendar.MINUTE)));
+        (new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                while (!Thread.interrupted())
+                    try
+                    {
+                        Thread.sleep(1000); //1초 간격으로 실행
+                        runOnUiThread(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                c.setTimeInMillis(System.currentTimeMillis());
+                                currentTime.setText((c.get(Calendar.AM_PM)== 0? "AM" : "PM") + " " + (c.get(Calendar.HOUR)==0? 12:c.get(Calendar.HOUR)) + ":" + (c.get(Calendar.MINUTE) < 10? "0" + c.get(Calendar.MINUTE) :c.get(Calendar.MINUTE)));
+                            }
+                        });
+                    }
+                    catch (InterruptedException e)
+                    {
+                        e.printStackTrace();
+                    }
+            }
+        })).start();
+
+        switch (weather.getMain()) {
+            case "Clear" :
+                if(c.get(Calendar.HOUR_OF_DAY) >= 6 && c.get(Calendar.HOUR_OF_DAY) <= 17) {
+                    weather_main.setImageResource(R.drawable.weather_icon_clear_sun);
+                } else {
+                    weather_main.setImageResource(R.drawable.weather_icon_clear_moon);
+                }
+                break;
+            case "Drizzle" :
+                if(c.get(Calendar.HOUR_OF_DAY) >= 6 && c.get(Calendar.HOUR_OF_DAY) <= 17) {
+                    weather_main.setImageResource(R.drawable.weather_icon_drizzle_sun);
+                } else {
+                    weather_main.setImageResource(R.drawable.weather_icon_drizzle_moon);
+                }
+                break;
+            case "Clouds" :
+                weather_main.setImageResource(R.drawable.weather_icon_clouds);
+                break;
+            case "Rain" :
+                weather_main.setImageResource(R.drawable.weather_icon_rain);
+                break;
+            case "Snow" :
+                weather_main.setImageResource(R.drawable.weather_icon_snow);
+                break;
+            case "Thunderstorm":
+                weather_main.setImageResource(R.drawable.weather_icon_thunderstorm);
+                break;
+            default:
+                weather_main.setImageResource(R.drawable.weather_icon_other);
+                break;
+        }
+        tv_temp.setText(weather.getTemp()+"℃");
+        tv_feelsLike.setText(weather.getFeelsLike() + "℃");
+        tv_humidity.setText(weather.getHumidity()+"%");
+        tv_windSpeed.setText(weather.getWindSpeed()+ "m/s");
+
+        deleteBtn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                int action = event.getAction();
+
+
+                if(action==MotionEvent.ACTION_DOWN) {
+                    deleteBtn.setImageResource(R.drawable.delete_location_btn_pressed);
+                }
+                else if(action==MotionEvent.ACTION_UP){
+                    deleteBtn.setImageResource(R.drawable.delete_location_btn);
+                    cur.close();
+                    sqlDB.close();
+                    sqlDB = dbHelper.getReadableDatabase();
+                    sqlDB.execSQL("delete from tbl_weather where id = " + id + ";");
+                    sqlDB.close();
+                    dbHelper.close();
+                    Intent intent = new Intent(WeatherInfoActivity.this, MainActivity.class);
+                    finish();
+                    startActivity(intent);
+                }
+
+                return false;
+            }
+        });
+    }
+    @Override
+    public void onBackPressed() {
+        cur.close();
+        sqlDB.close();
+        dbHelper.close();
+        Intent intent = new Intent(WeatherInfoActivity.this, MainActivity.class);
+        finish();
+        startActivity(intent);
+    }
+}
