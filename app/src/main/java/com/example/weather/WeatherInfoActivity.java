@@ -7,25 +7,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -190,7 +178,7 @@ public class WeatherInfoActivity extends AppCompatActivity {
                     sqlDB.execSQL("delete from tbl_weather where id = " + id + ";");
                     sqlDB.close();
                     dbHelper.close();
-                    Intent intent = new Intent(WeatherInfoActivity.this, MainActivity.class);
+                    Intent intent = new Intent(WeatherInfoActivity.this, WeatherMainActivity.class);
                     finish();
                     startActivity(intent);
                 }
@@ -204,7 +192,7 @@ public class WeatherInfoActivity extends AppCompatActivity {
         cur.close();
         sqlDB.close();
         dbHelper.close();
-        Intent intent = new Intent(WeatherInfoActivity.this, MainActivity.class);
+        Intent intent = new Intent(WeatherInfoActivity.this, WeatherMainActivity.class);
         finish();
         startActivity(intent);
     }

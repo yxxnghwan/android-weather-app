@@ -137,7 +137,7 @@ public class AddLocationActivity extends AppCompatActivity {
 
                     dbHelper.close();
                     sqlDB.close();
-                    Intent intent = new Intent(AddLocationActivity.this, MainActivity.class);
+                    Intent intent = new Intent(AddLocationActivity.this, WeatherMainActivity.class);
                     finish();
                     startActivity(intent);
 
@@ -184,7 +184,7 @@ public class AddLocationActivity extends AppCompatActivity {
     public void onBackPressed() {
         sqlDB.close();
         dbHelper.close();
-        Intent intent = new Intent(AddLocationActivity.this, MainActivity.class);
+        Intent intent = new Intent(AddLocationActivity.this, WeatherMainActivity.class);
         finish();
         startActivity(intent);
     }
