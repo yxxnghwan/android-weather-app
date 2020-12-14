@@ -19,6 +19,8 @@ import java.util.Date;
 public class Weather {
 
     private String main = "";
+    private String desc = "";
+    private String icon = "";
     private double temp;            // 온도
     private double feelsLike;       // 체감온도
     private double humidity;        // 습도%
@@ -38,6 +40,14 @@ public class Weather {
     public void setMain(String main) {
         this.main = main;
     }
+
+    public String getDesc() { return desc; }
+
+    public void setDesc(String desc) { this.desc = desc; }
+
+    public String getIcon() { return icon; }
+
+    public void setIcon(String icon) { this.icon = icon; }
 
     public double getTemp() {
         return temp;
@@ -89,6 +99,8 @@ public class Weather {
             // 이상하게 weather라는 배열에 한개의 객체만 들어가있다. 어차피 한개 객체만 들어 있으면서, 그래서 쓰기가 복잡하다
 
             setMain(weatherJSON.getJSONArray("weather").getJSONObject(0).getString("main"));
+            setDesc(weatherJSON.getJSONArray("weather").getJSONObject(0).getString("description"));
+            setIcon(weatherJSON.getJSONArray("weather").getJSONObject(0).getString("icon"));
             setTemp(weatherJSON.getJSONObject("main").getDouble("temp"));
             setFeelsLike(weatherJSON.getJSONObject("main").getDouble("feels_like"));
             setHumidity(weatherJSON.getJSONObject("main").getDouble("humidity"));
@@ -111,6 +123,7 @@ public class Weather {
                 Weather w = new Weather(activity);
                 JSONObject jo = array.getJSONObject(i);
                 w.setMain(jo.getJSONArray("weather").getJSONObject(0).getString("main"));
+                w.setIcon(jo.getJSONArray("weather").getJSONObject(0).getString("icon"));
                 w.setTemp(jo.getJSONObject("main").getDouble("temp"));
                 w.setFeelsLike(jo.getJSONObject("main").getDouble("feels_like"));
                 w.setHumidity(jo.getJSONObject("main").getDouble("humidity"));

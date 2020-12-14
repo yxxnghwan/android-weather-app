@@ -7,12 +7,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -81,7 +84,7 @@ public class WeatherInfoActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(WeatherInfoActivity.this);
         forecastList.setLayoutManager(linearLayoutManager);
 
-        adapter = new RecyclerForecastAdapter();
+        adapter = new RecyclerForecastAdapter(WeatherInfoActivity.this);
         forecastList.setAdapter(adapter);
 
         for(Weather w : forecast) {
@@ -123,38 +126,8 @@ public class WeatherInfoActivity extends AppCompatActivity {
                     }
             }
         })).start();
-
-        switch (weather.getMain()) {
-            case "Clear" :
-                if(c.get(Calendar.HOUR_OF_DAY) >= 6 && c.get(Calendar.HOUR_OF_DAY) <= 17) {
-                    weather_main.setImageResource(R.drawable.weather_icon_clear_sun);
-                } else {
-                    weather_main.setImageResource(R.drawable.weather_icon_clear_moon);
-                }
-                break;
-            case "Drizzle" :
-                if(c.get(Calendar.HOUR_OF_DAY) >= 6 && c.get(Calendar.HOUR_OF_DAY) <= 17) {
-                    weather_main.setImageResource(R.drawable.weather_icon_drizzle_sun);
-                } else {
-                    weather_main.setImageResource(R.drawable.weather_icon_drizzle_moon);
-                }
-                break;
-            case "Clouds" :
-                weather_main.setImageResource(R.drawable.weather_icon_clouds);
-                break;
-            case "Rain" :
-                weather_main.setImageResource(R.drawable.weather_icon_rain);
-                break;
-            case "Snow" :
-                weather_main.setImageResource(R.drawable.weather_icon_snow);
-                break;
-            case "Thunderstorm":
-                weather_main.setImageResource(R.drawable.weather_icon_thunderstorm);
-                break;
-            default:
-                weather_main.setImageResource(R.drawable.weather_icon_other);
-                break;
-        }
+        Uri imgUri = Uri.parse("http://openweathermap.org/img/wn/"+ weather.getIcon() +"@2x.png");
+        Glide.with(WeatherInfoActivity.this).load(imgUri).into(weather_main);
         tv_temp.setText(weather.getTemp()+"℃");
         tv_feelsLike.setText(weather.getFeelsLike() + "℃");
         tv_humidity.setText(weather.getHumidity()+"%");

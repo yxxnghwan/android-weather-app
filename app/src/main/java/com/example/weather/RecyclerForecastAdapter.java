@@ -1,6 +1,8 @@
 package com.example.weather;
 
 
+import android.app.Activity;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +13,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
 
 public class RecyclerForecastAdapter extends RecyclerView.Adapter<RecyclerForecastAdapter.ItemViewHolder> {
+    Activity activity;
+    public RecyclerForecastAdapter(Activity activity) {
+        super();
+        this.activity = activity;
+    }
     // adapter에 들어갈 list 입니다.
     private ArrayList<Weather> listData = new ArrayList<>();
 
@@ -49,7 +58,7 @@ public class RecyclerForecastAdapter extends RecyclerView.Adapter<RecyclerForeca
     // 여기서 subView를 setting 해줍니다.
     class ItemViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView main;
+        private ImageView img;
         private TextView temp;
         private TextView time;
 
@@ -57,7 +66,7 @@ public class RecyclerForecastAdapter extends RecyclerView.Adapter<RecyclerForeca
             super(itemView);
 
             time = itemView.findViewById(R.id.recycler_time);
-            main = itemView.findViewById(R.id.recycler_main);
+            img = itemView.findViewById(R.id.recycler_main);
             temp = itemView.findViewById(R.id.recycler_temp);
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -74,37 +83,9 @@ public class RecyclerForecastAdapter extends RecyclerView.Adapter<RecyclerForeca
             c.setTimeInMillis(weather.getTimeMillis());
                         // (c.get(Calendar.MONTH)+1) + "월 " + c.get(Calendar.DAY_OF_MONTH) + "일 " +
             time.setText((c.get(Calendar.AM_PM)== 0? "오전" : "오후") + " " + (c.get(Calendar.HOUR)==0? 12:c.get(Calendar.HOUR)) + "시");
-            switch (weather.getMain()) {
-                case "Clear" :
-                    if(c.get(Calendar.HOUR_OF_DAY) > 5 && c.get(Calendar.HOUR_OF_DAY) < 18) {
-                        main.setImageResource(R.drawable.weather_icon_clear_sun);
-                    } else {
-                        main.setImageResource(R.drawable.weather_icon_clear_moon);
-                    }
-                    break;
-                case "Drizzle" :
-                    if(c.get(Calendar.HOUR_OF_DAY) > 5 && c.get(Calendar.HOUR_OF_DAY) < 18) {
-                        main.setImageResource(R.drawable.weather_icon_drizzle_sun);
-                    } else {
-                        main.setImageResource(R.drawable.weather_icon_drizzle_moon);
-                    }
-                    break;
-                case "Clouds" :
-                    main.setImageResource(R.drawable.weather_icon_clouds);
-                    break;
-                case "Rain" :
-                    main.setImageResource(R.drawable.weather_icon_rain);
-                    break;
-                case "Snow" :
-                    main.setImageResource(R.drawable.weather_icon_snow);
-                    break;
-                case "Thunderstorm":
-                    main.setImageResource(R.drawable.weather_icon_thunderstorm);
-                    break;
-                default:
-                    main.setImageResource(R.drawable.weather_icon_other);
-                    break;
-            }
+            Uri imgUri = Uri.parse("http://openweathermap.org/img/wn/"+ weather.getIcon() +"@2x.png");
+            Glide.with(activity).load(imgUri).into(img);
+
             temp.setText(weather.getTemp()+"℃");
         }
     }
